@@ -18,6 +18,8 @@
 html {
   scroll-behavior: smooth;
   background: var(--color-ink);
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 body {
@@ -33,6 +35,7 @@ body {
 button,
 a {
   -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 button:focus-visible,
@@ -57,6 +60,54 @@ a:focus-visible {
 
 .logo-on-dark {
   filter: invert(1) hue-rotate(180deg) brightness(1.12);
+}
+
+.range-touch {
+  height: 44px;
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent;
+}
+
+.range-touch::-webkit-slider-runnable-track {
+  height: 4px;
+  border-radius: 999px;
+  background: linear-gradient(
+    to right,
+    var(--color-brand) var(--range-progress, 0%),
+    rgba(255, 255, 255, 0.2) var(--range-progress, 0%)
+  );
+}
+
+.range-touch::-webkit-slider-thumb {
+  width: 16px;
+  height: 16px;
+  margin-top: -6px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--color-brand);
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.range-touch::-moz-range-track {
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.range-touch::-moz-range-progress {
+  height: 4px;
+  border-radius: 999px;
+  background: var(--color-brand);
+}
+
+.range-touch::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--color-brand);
 }
 
 @media (prefers-reduced-motion: reduce) {

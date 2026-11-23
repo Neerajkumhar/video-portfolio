@@ -10,6 +10,7 @@ A static, video-first portfolio for VISUARK built with React, Vite and Tailwind 
 - Infinite horizontal showcase rows with drag, pause-on-hover and reduced-motion fallbacks
 - Focus-managed fullscreen video player with seek, volume, replay, fullscreen and keyboard controls
 - Honest contact CTA with share/copy actions because no contact details were supplied
+- Responsive from 320px phones through tablet, desktop and landscape with 44px touch targets and safe-area insets
 - No backend, API, database, paid service or external font/CDN dependency
 
 ## Stack

@@ -7,7 +7,7 @@
 
 | 命令 | 结果 |
 | --- | --- |
-| `npm run build` | 通过，Vite 6.4.6，1954 modules，3.37s |
+| `npm run build` | 通过，Vite 6.4.6，1954 modules，3.62s |
 | `npm run validate:assets` | 通过：9 个分类、26 个视频，所有派生与原始路径存在 |
 | `node --test scripts/validate-assets.test.mjs` | 5/5 通过 |
 | `npm audit` | 0 vulnerabilities |
@@ -15,9 +15,9 @@
 构建产物：
 
 - `dist/index.html`：0.67 kB（gzip 0.39 kB）
-- JS：345.08 kB（gzip 104.96 kB）
-- CSS：24.62 kB（gzip 5.56 kB）
-- `dist` 总计：约 568.9 MiB / 82 个文件
+- JS：346.00 kB（gzip 105.19 kB）
+- CSS：26.02 kB（gzip 5.87 kB）
+- `dist` 总计：约 569.0 MiB / 82 个文件
 
 ## 资源处理
 
@@ -40,6 +40,13 @@ Chromium（Playwright）24/24 通过：
 - CTA 弹窗可打开/关闭；移动菜单可展开。
 - 无 console error 或 page error。
 
+响应式审计（Playwright，320×800、375×812、414×896、768×1024、1024×768、812×375 横屏）：
+
+- 所有宽度 `document.scrollWidth - innerWidth = 0`，无横向溢出、无越界元素。
+- 所有按钮/链接触控目标 ≥ 44×44 CSS px；移动端菜单、详情播放器与联系弹窗控件均通过。
+- Hero 内容在窄屏与横屏均无裁切，标题无文本溢出。
+- 移动端播放图标常显；描述文案改为 “Tap to preview · Tap to play”。
+
 补充检查：
 
 - `prefers-reduced-motion: reduce`：Lenis 不初始化，横向片单停止并显示 `PAUSED`。
@@ -51,6 +58,8 @@ Chromium（Playwright）24/24 通过：
 - 已移除独立的 Showreel 区块；Hero 的 “Watch Showreel” 直接打开详情播放器。分类卡与 About 视觉块使用轻量悬停预览。
 - 全局同时最多 3 个预览视频；`IntersectionObserver` 暂停离屏视频。
 - 悬停预览默认静音；首次点击/按键后解锁声音，且同一时间最多一个预览有声。
+- 小于 640px 的屏幕禁用横向片单自动预览，只显示海报，节省移动流量与电量。
+- 固定导航与弹窗适配 `env(safe-area-inset-*)`，按钮/链接最小触控目标 44px，进度条触控区域 44px。
 - 完整视频只在用户打开详情播放器后加载。
 - 横向片单使用 `requestAnimationFrame` 驱动 `scrollLeft`，悬停、聚焦、拖拽与触摸时暂停。
 - 无限滚动通过复制一组卡片实现，不创建额外 DOM 动画库负担。

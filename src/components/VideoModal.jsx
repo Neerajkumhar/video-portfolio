@@ -13,7 +13,7 @@ import {
 } from 'lucide-react'
 import { assetPath, formatDuration } from '../lib/assets.js'
 
-const CONTROL_CLASS = 'flex h-10 w-10 items-center justify-center border border-white/20 text-white transition-colors hover:border-brand hover:bg-brand/10 focus-visible:border-brand'
+const CONTROL_CLASS = 'flex h-11 w-11 shrink-0 items-center justify-center border border-white/20 text-white transition-colors hover:border-brand hover:bg-brand/10 focus-visible:border-brand'
 
 export default function VideoModal({ videos, index, onClose, onNavigate }) {
   const current = videos[index]
@@ -176,7 +176,7 @@ export default function VideoModal({ videos, index, onClose, onNavigate }) {
 
   return (
     <motion.div
-      className="fixed inset-0 z-[120] flex flex-col bg-black/96 px-4 py-4 sm:px-8 sm:py-6"
+      className="fixed inset-0 z-[120] flex flex-col bg-black/96 px-4 pb-[calc(1rem+env(safe-area-inset-bottom))] pt-[calc(1rem+env(safe-area-inset-top))] sm:px-8 sm:py-6 sm:pb-6 sm:pt-6"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -224,7 +224,7 @@ export default function VideoModal({ videos, index, onClose, onNavigate }) {
               <div className="flex flex-col items-center gap-3 px-6 text-center">
                 <p className="font-display text-xl uppercase tracking-wide">This video could not be loaded</p>
                 <p className="text-sm text-muted">{current.originalName}</p>
-                <button type="button" onClick={() => navigate(1)} className="mt-2 border border-brand px-5 py-2 text-xs uppercase tracking-cinematic text-brand">
+                <button type="button" onClick={() => navigate(1)} className="mt-2 inline-flex min-h-11 items-center border border-brand px-5 text-xs uppercase tracking-cinematic text-brand">
                   Next video
                 </button>
               </div>
@@ -254,8 +254,8 @@ export default function VideoModal({ videos, index, onClose, onNavigate }) {
             value={Math.min(currentTime, duration || 0)}
             onChange={seek}
             aria-label="Video progress"
-            className="h-1 w-full cursor-pointer appearance-none bg-white/20 accent-brand"
-            style={{ background: `linear-gradient(to right, #299DD5 ${progress}%, rgba(255,255,255,0.2) ${progress}%)` }}
+            className="range-touch -my-5 w-full cursor-pointer"
+            style={{ '--range-progress': `${progress}%` }}
           />
           <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-2">

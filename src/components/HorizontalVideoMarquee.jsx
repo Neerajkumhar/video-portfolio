@@ -16,6 +16,7 @@ export default function HorizontalVideoMarquee({ videos, direction = 'forward', 
   const [hovered, setHovered] = useState(false)
   const [focused, setFocused] = useState(false)
   const [touchPaused, setTouchPaused] = useState(false)
+  const [isSmallScreen, setIsSmallScreen] = useState(() => typeof window !== 'undefined' && window.matchMedia('(max-width: 639px)').matches)
   const reducedMotion = usePrefersReducedMotion()
   const { isDragging, dragHandlers } = useHorizontalDrag(scrollerRef)
   const isPaused = hovered || focused || isDragging || touchPaused || reducedMotion
@@ -60,6 +61,13 @@ export default function HorizontalVideoMarquee({ videos, direction = 'forward', 
     return () => clearTimeout(timer)
   }, [touchPaused])
 
+  useEffect(() => {
+    const query = window.matchMedia('(max-width: 639px)')
+    const onChange = (event) => setIsSmallScreen(event.matches)
+    query.addEventListener?.('change', onChange)
+    return () => query.removeEventListener?.('change', onChange)
+  }, [])
+
   const cards = [...videos, ...videos]
 
   return (
@@ -97,7 +105,7 @@ export default function HorizontalVideoMarquee({ videos, direction = 'forward', 
               video={video}
               onOpen={(item) => onOpen(item, videos)}
               variant={video.orientation === 'landscape' ? 'marqueeWide' : 'marquee'}
-              autoPlayPreview={!isPaused}
+              autoPlayPreview={!isPaused && !isSmallScreen}
               className={video.orientation === 'landscape' ? 'aspect-video' : 'aspect-[9/16]'}
             />
           </motion.div>

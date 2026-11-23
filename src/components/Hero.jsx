@@ -100,7 +100,7 @@ export default function Hero({ onOpenShowreel }) {
           </div>
           <a
             href="#categories"
-            className="group flex items-center gap-3 text-[10px] uppercase tracking-cinematic text-white/50 transition-colors hover:text-brand"
+            className="group flex min-h-11 items-center gap-3 text-[10px] uppercase tracking-cinematic text-white/50 transition-colors hover:text-brand"
             aria-label="Scroll to categories"
           >
             Scroll

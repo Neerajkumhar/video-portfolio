@@ -50,7 +50,7 @@ export default function VideoGallery({ activeCategory, onChangeCategory, onOpen 
                 type="button"
                 onClick={() => onChangeCategory(filter.id)}
                 aria-pressed={active}
-                className={`shrink-0 border px-4 py-2.5 text-[10px] font-medium uppercase tracking-[0.16em] transition-colors duration-300 ${
+                className={`inline-flex min-h-11 shrink-0 items-center border px-4 py-2.5 text-[10px] font-medium uppercase tracking-[0.16em] transition-colors duration-300 ${
                   active
                     ? 'border-brand bg-brand text-ink'
                     : 'border-white/15 text-white/60 hover:border-white/40 hover:text-white'
@@ -67,7 +67,12 @@ export default function VideoGallery({ activeCategory, onChangeCategory, onOpen 
 
         <div className="mt-8 flex items-baseline justify-between gap-4">
           <h3 className="font-display text-lg font-semibold uppercase tracking-wide text-white">{label}</h3>
-          <span className="text-[10px] uppercase tracking-cinematic text-white/35">Hover to preview · Click to play</span>
+          <span className="hidden text-[10px] uppercase tracking-cinematic text-white/35 sm:inline">
+            Hover to preview · Click to play
+          </span>
+          <span className="text-[10px] uppercase tracking-cinematic text-white/35 sm:hidden">
+            Tap to preview · Tap to play
+          </span>
         </div>
 
         {videos.length ? (
@@ -87,7 +92,7 @@ export default function VideoGallery({ activeCategory, onChangeCategory, onOpen 
         ) : (
           <div role="status" className="mt-6 border border-white/10 bg-surface px-6 py-16 text-center">
             <p className="font-display text-lg uppercase tracking-wide">No videos in this category</p>
-            <button type="button" onClick={() => onChangeCategory('all')} className="mt-4 text-xs uppercase tracking-cinematic text-brand">
+            <button type="button" onClick={() => onChangeCategory('all')} className="mt-4 inline-flex min-h-11 items-center text-xs uppercase tracking-cinematic text-brand">
               View all work
             </button>
           </div>

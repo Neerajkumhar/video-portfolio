@@ -14,7 +14,7 @@ export default function Footer() {
       <div className="mx-auto max-w-[1600px] px-[var(--page-gutter)]">
         <div className="flex flex-col gap-10 sm:flex-row sm:items-start sm:justify-between">
           <div className="max-w-sm">
-            <a href="#home" aria-label="VISUARK home">
+            <a href="#home" aria-label="VISUARK home" className="inline-flex min-h-11 items-center">
               <img
                 src={assetPath(portfolio.site.logo)}
                 alt="VISUARK"
@@ -30,7 +30,7 @@ export default function Footer() {
 
           <nav className="flex flex-col gap-3" aria-label="Footer navigation">
             {LINKS.map((link) => (
-              <a key={link.href} href={link.href} className="text-xs uppercase tracking-[0.14em] text-white/55 transition-colors hover:text-brand">
+              <a key={link.href} href={link.href} className="inline-flex min-h-11 items-center text-xs uppercase tracking-[0.14em] text-white/55 transition-colors hover:text-brand">
                 {link.label}
               </a>
             ))}
@@ -40,7 +40,7 @@ export default function Footer() {
             <p className="text-[10px] uppercase tracking-cinematic text-white/40">Have a project?</p>
             <a
               href="#contact"
-              className="inline-flex items-center gap-2 text-sm font-medium uppercase tracking-[0.14em] text-brand transition-opacity hover:opacity-70"
+              className="inline-flex min-h-11 items-center gap-2 text-sm font-medium uppercase tracking-[0.14em] text-brand transition-opacity hover:opacity-70"
             >
               Let&apos;s Work Together
               <span aria-hidden="true">↗</span>

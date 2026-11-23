@@ -99,7 +99,7 @@ export default function VideoCard({
         )}
       </span>
 
-      <span className="pointer-events-none absolute right-4 top-4 flex h-9 w-9 items-center justify-center border border-white/40 bg-black/35 text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100">
+      <span className="pointer-events-none absolute right-4 top-4 flex h-10 w-10 items-center justify-center border border-white/40 bg-black/35 text-white opacity-100 transition-opacity duration-300 group-focus-visible:opacity-100 sm:h-9 sm:w-9 sm:opacity-0 sm:group-hover:opacity-100">
         <Play className="ml-0.5 h-3.5 w-3.5 fill-current" aria-hidden="true" />
       </span>
 

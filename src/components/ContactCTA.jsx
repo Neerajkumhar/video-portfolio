@@ -97,7 +97,7 @@ export default function ContactCTA() {
       <AnimatePresence>
         {open && (
           <motion.div
-            className="fixed inset-0 z-[110] flex items-center justify-center bg-black/85 px-4 backdrop-blur-sm"
+            className="fixed inset-0 z-[110] flex items-center justify-center bg-black/85 px-4 pb-[calc(1rem+env(safe-area-inset-bottom))] pt-[calc(1rem+env(safe-area-inset-top))] backdrop-blur-sm"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -126,7 +126,7 @@ export default function ContactCTA() {
                   type="button"
                   onClick={() => setOpen(false)}
                   aria-label="Close dialog"
-                  className="flex h-10 w-10 items-center justify-center border border-white/20 text-white hover:border-brand hover:text-brand"
+                  className="flex h-11 w-11 shrink-0 items-center justify-center border border-white/20 text-white hover:border-brand hover:text-brand"
                 >
                   <X className="h-4 w-4" aria-hidden="true" />
                 </button>

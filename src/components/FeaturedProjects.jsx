@@ -66,7 +66,7 @@ export default function FeaturedProjects({ onOpen }) {
                     className="absolute inset-0 h-full w-full object-cover opacity-65 transition-all duration-700 group-hover:scale-105 group-hover:opacity-85"
                   />
                   <span className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
-                  <span className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center border border-white/40 bg-black/30 text-white opacity-0 transition-opacity group-hover:opacity-100">
+                  <span className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center border border-white/40 bg-black/30 text-white opacity-100 transition-opacity group-focus-visible:opacity-100 sm:opacity-0 sm:group-hover:opacity-100">
                     <Play className="ml-0.5 h-3.5 w-3.5 fill-current" aria-hidden="true" />
                   </span>
                   <span className="relative flex w-full items-end justify-between gap-4 p-5">

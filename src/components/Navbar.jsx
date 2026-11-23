@@ -34,14 +34,14 @@ export default function Navbar() {
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-[80] transition-all duration-500 ${
+      className={`fixed inset-x-0 top-0 z-[80] pt-[env(safe-area-inset-top)] transition-all duration-500 ${
         scrolled || menuOpen
           ? 'border-b border-white/10 bg-ink/90 shadow-[0_18px_50px_rgba(0,0,0,0.35)] backdrop-blur-md'
           : 'bg-transparent'
       }`}
     >
       <nav className="mx-auto flex h-[76px] max-w-[1600px] items-center justify-between px-[var(--page-gutter)]" aria-label="Main navigation">
-        <a href="#home" className="flex shrink-0 items-center" aria-label="VISUARK home">
+        <a href="#home" className="flex min-h-11 shrink-0 items-center" aria-label="VISUARK home">
           <img
             src={assetPath(portfolio.site.logo)}
             alt="VISUARK"
@@ -56,10 +56,10 @@ export default function Navbar() {
             <li key={link.href}>
               <a
                 href={link.href}
-                className="group relative block py-2 text-[11px] font-medium uppercase tracking-[0.18em] text-white/65 transition-colors hover:text-white"
+                className="group relative flex min-h-11 min-w-11 items-center justify-center text-[11px] font-medium uppercase tracking-[0.18em] text-white/65 transition-colors hover:text-white"
               >
                 {link.label}
-                <span className="absolute bottom-0 left-0 h-px w-0 bg-brand transition-all duration-300 group-hover:w-full" />
+                <span className="absolute bottom-1 left-0 h-px w-0 bg-brand transition-all duration-300 group-hover:w-full" />
               </a>
             </li>
           ))}
@@ -68,7 +68,7 @@ export default function Navbar() {
         <div className="hidden items-center gap-5 lg:flex">
           <a
             href="#contact"
-            className="text-[11px] font-medium uppercase tracking-[0.16em] text-white/65 transition-colors hover:text-brand"
+            className="inline-flex min-h-11 items-center text-[11px] font-medium uppercase tracking-[0.16em] text-white/65 transition-colors hover:text-brand"
           >
             Let&apos;s Work Together
           </a>
