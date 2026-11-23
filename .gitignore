@@ -1,0 +1,20 @@
+node_modules/
+dist/
+.superpowers/
+*.log
+.DS_Store
+.env
+.env.*
+
+# Original local footage and source logo are intentionally excluded.
+# Browser-ready derivatives in public/assets/ are committed.
+/Ai Edits/
+/Car Edits/
+/Event Edits/
+/Industrial Production Edits/
+/Influencer Edits/
+/Politics Edits/
+/Product Edits/
+/Promotional Edits/
+/Visuark - Recent Work/
+/logo.png
