@@ -22,7 +22,9 @@ export default function VideoModal({ videos, index, onClose, onNavigate }) {
   const closeRef = useRef(null)
   const dialogRef = useRef(null)
   const [playing, setPlaying] = useState(false)
-  const [muted, setMuted] = useState(false)
+  const [muted, setMuted] = useState(() => typeof window !== 'undefined' && (
+    window.matchMedia?.('(hover: none)').matches || navigator.maxTouchPoints > 0
+  ))
   const [volume, setVolume] = useState(0.8)
   const [currentTime, setCurrentTime] = useState(0)
   const [duration, setDuration] = useState(current?.duration || 0)
@@ -71,6 +73,8 @@ export default function VideoModal({ videos, index, onClose, onNavigate }) {
     setFailed(false)
     setCurrentTime(0)
     setDuration(current.duration || 0)
+    video.volume = volume
+    video.muted = muted
     video.load()
     const attempt = video.play()
     if (attempt && typeof attempt.catch === 'function') {
@@ -91,12 +95,14 @@ export default function VideoModal({ videos, index, onClose, onNavigate }) {
     }
     const onPlay = () => setPlaying(true)
     const onPause = () => setPlaying(false)
-    const onFullscreen = () => setIsFullscreen(Boolean(document.fullscreenElement))
+    const onFullscreen = () => setIsFullscreen(Boolean(document.fullscreenElement || document.webkitFullscreenElement))
     video.addEventListener('timeupdate', updateTime)
     video.addEventListener('loadedmetadata', updateTime)
     video.addEventListener('play', onPlay)
     video.addEventListener('pause', onPause)
     video.addEventListener('ended', onPause)
+    video.addEventListener('webkitbeginfullscreen', onFullscreen)
+    video.addEventListener('webkitendfullscreen', onFullscreen)
     document.addEventListener('fullscreenchange', onFullscreen)
     return () => {
       video.removeEventListener('timeupdate', updateTime)
@@ -104,6 +110,8 @@ export default function VideoModal({ videos, index, onClose, onNavigate }) {
       video.removeEventListener('play', onPlay)
       video.removeEventListener('pause', onPause)
       video.removeEventListener('ended', onPause)
+      video.removeEventListener('webkitbeginfullscreen', onFullscreen)
+      video.removeEventListener('webkitendfullscreen', onFullscreen)
       document.removeEventListener('fullscreenchange', onFullscreen)
     }
   }, [current?.id])
@@ -142,12 +150,22 @@ export default function VideoModal({ videos, index, onClose, onNavigate }) {
 
   if (!current) return null
 
-  const toggleFullscreen = () => {
-    if (document.fullscreenElement) {
-      document.exitFullscreen?.()
+  const toggleFullscreen = async () => {
+    if (document.fullscreenElement || document.webkitFullscreenElement) {
+      if (document.exitFullscreen) await document.exitFullscreen()
+      else document.webkitExitFullscreen?.()
       return
     }
-    frameRef.current?.requestFullscreen?.()
+    const video = videoRef.current
+    if (video?.webkitEnterFullscreen) {
+      video.webkitEnterFullscreen()
+      return
+    }
+    try {
+      await dialogRef.current?.requestFullscreen?.()
+    } catch {
+      setIsFullscreen(false)
+    }
   }
 
   const toggleMute = () => {
@@ -176,7 +194,7 @@ export default function VideoModal({ videos, index, onClose, onNavigate }) {
 
   return (
     <motion.div
-      className="fixed inset-0 z-[120] flex flex-col bg-black/96 px-4 pb-[calc(1rem+env(safe-area-inset-bottom))] pt-[calc(1rem+env(safe-area-inset-top))] sm:px-8 sm:py-6 sm:pb-6 sm:pt-6"
+      className="fixed inset-0 z-[120] flex h-[100dvh] flex-col bg-black px-4 pb-[calc(1rem+env(safe-area-inset-bottom))] pt-[calc(1rem+env(safe-area-inset-top))] sm:px-8 sm:py-6 sm:pb-6 sm:pt-6"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -191,21 +209,21 @@ export default function VideoModal({ videos, index, onClose, onNavigate }) {
         role="dialog"
         aria-modal="true"
         aria-label={`Now playing: ${current.title}`}
-        className="mx-auto flex h-full w-full max-w-[1200px] flex-col"
+        className="mx-auto flex h-full w-full min-h-0 max-w-[1200px] flex-col bg-black"
         initial={{ opacity: 0, scale: 0.985, y: 12 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.985, y: 12 }}
         transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
       >
-        <div className="flex items-start justify-between gap-4 border-b border-white/10 pb-4">
+        <div className="flex shrink-0 items-start justify-between gap-3 border-b border-white/10 pb-3 sm:gap-4 sm:pb-4">
           <div className="min-w-0">
-            <p className="text-[10px] uppercase tracking-cinematic text-brand">
+            <p className="truncate text-[10px] uppercase tracking-cinematic text-brand [@media(max-height:520px)]:hidden">
               {current.categoryLabel} — {formatDuration(current.duration)}
             </p>
-            <h2 className="mt-1 truncate font-display text-lg font-semibold uppercase tracking-wide text-white sm:text-2xl">
+            <h2 className="mt-1 truncate font-display text-base font-semibold uppercase tracking-wide text-white sm:text-2xl">
               {current.title}
             </h2>
-            <p className="mt-1 truncate text-[11px] text-white/40">{current.originalName}</p>
+            <p className="mt-1 hidden truncate text-[11px] text-white/40 [@media(max-height:520px)]:hidden sm:block">{current.originalName}</p>
           </div>
           <button
             ref={closeRef}
@@ -218,34 +236,32 @@ export default function VideoModal({ videos, index, onClose, onNavigate }) {
           </button>
         </div>
 
-        <div className="flex min-h-0 flex-1 items-center justify-center py-4">
-          <div ref={frameRef} className="relative flex h-full w-full items-center justify-center bg-black">
-            {failed ? (
-              <div className="flex flex-col items-center gap-3 px-6 text-center">
-                <p className="font-display text-xl uppercase tracking-wide">This video could not be loaded</p>
-                <p className="text-sm text-muted">{current.originalName}</p>
-                <button type="button" onClick={() => navigate(1)} className="mt-2 inline-flex min-h-11 items-center border border-brand px-5 text-xs uppercase tracking-cinematic text-brand">
-                  Next video
-                </button>
-              </div>
-            ) : (
-              <video
-                ref={videoRef}
-                className="max-h-full max-w-full object-contain"
-                poster={assetPath(current.poster)}
-                playsInline
-                preload="auto"
-                onError={() => setFailed(true)}
-                onClick={togglePlay}
-              >
-                <source src={assetPath(current.src)} type="video/mp4" />
-                Your browser does not support HTML5 video.
-              </video>
-            )}
-          </div>
+        <div ref={frameRef} className="relative min-h-0 flex-1 overflow-hidden bg-black">
+          {failed ? (
+            <div className="flex h-full flex-col items-center justify-center gap-3 px-6 text-center">
+              <p className="font-display text-xl uppercase tracking-wide">This video could not be loaded</p>
+              <p className="text-sm text-muted">{current.originalName}</p>
+              <button type="button" onClick={() => navigate(1)} className="mt-2 inline-flex min-h-11 items-center border border-brand px-5 text-xs uppercase tracking-cinematic text-brand">
+                Next video
+              </button>
+            </div>
+          ) : (
+            <video
+              ref={videoRef}
+              className="absolute inset-0 h-full w-full object-contain"
+              poster={assetPath(current.poster)}
+              playsInline
+              preload="auto"
+              onError={() => setFailed(true)}
+              onClick={togglePlay}
+            >
+              <source src={assetPath(current.src)} type="video/mp4" />
+              Your browser does not support HTML5 video.
+            </video>
+          )}
         </div>
 
-        <div className="border-t border-white/10 pt-4">
+        <div className="shrink-0 border-t border-white/10 pt-3 [@media(max-height:520px)]:pt-2 sm:pt-4">
           <input
             type="range"
             min="0"
@@ -254,10 +270,10 @@ export default function VideoModal({ videos, index, onClose, onNavigate }) {
             value={Math.min(currentTime, duration || 0)}
             onChange={seek}
             aria-label="Video progress"
-            className="range-touch -my-5 w-full cursor-pointer"
+            className="range-touch -my-5 block w-full cursor-pointer"
             style={{ '--range-progress': `${progress}%` }}
           />
-          <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
+          <div className="mt-4 flex flex-wrap items-center justify-between gap-3 [@media(max-height:520px)]:mt-2">
             <div className="flex items-center gap-2">
               <button type="button" onClick={togglePlay} aria-label={playing ? 'Pause' : 'Play'} className={CONTROL_CLASS}>
                 {playing ? <Pause className="h-4 w-4" aria-hidden="true" /> : <Play className="h-4 w-4" aria-hidden="true" />}
@@ -295,7 +311,7 @@ export default function VideoModal({ videos, index, onClose, onNavigate }) {
               </button>
             </div>
           </div>
-          <p className="mt-3 hidden text-[10px] uppercase tracking-cinematic text-white/30 md:block">
+          <p className="mt-3 hidden text-[10px] uppercase tracking-cinematic text-white/30 [@media(max-height:520px)]:hidden md:block">
             Esc close · Arrow keys navigate · Space play/pause
           </p>
         </div>
